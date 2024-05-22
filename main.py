@@ -18,7 +18,6 @@ player.hitbox.y = 20
 clock = pygame.time.Clock()
 running = True
 frames = 0
-index = 0
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -29,11 +28,10 @@ while running:
     if frames == 60:
         frames = 0
 
+    player.movement()
+
     screen.fill((255,255,255))
-    print(index)
-    screen.blit(player.getWalkPic(index), player.getHitbox())
-    if frames % 6 == 0:
-        index = (index + 1) % player.getNumOfWalkPics()
+    screen.blit(player.getPlayerSprite(), player.getHitbox())
 
     pygame.display.flip()
 
