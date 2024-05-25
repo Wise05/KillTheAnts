@@ -1,6 +1,6 @@
 import pygame
 import objects
-import objects.player
+import objects.Player
 
 pygame.init()
 pygame.mixer.init()
@@ -10,10 +10,10 @@ displayHeight = 600
 screen = pygame.display.set_mode((displayWidth, displayHeight))
 caption = pygame.display.set_caption("Kill the Ants!")
 
-player = objects.player.Player()
+player = objects.Player.Player()
 
-player.hitbox.x = 20
-player.hitbox.y = 20
+player.normalHitbox.x = 20
+player.normalHitbox.y = 20
 
 clock = pygame.time.Clock()
 running = True

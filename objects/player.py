@@ -3,23 +3,25 @@ import pygame
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        # player is 22 x 40 px
-        self.idleImageRight = r"C:\Users\zevan\Kill The Ants!\images\GregTheSolver.png"
-        self.walkingPlayerPics = [
-            r"C:\Users\zevan\Kill The Ants!\images\GregRightLegFirstTrans.png",
-            r"C:\Users\zevan\Kill The Ants!\images\GregLeftFirstStep.png",
-            r"C:\Users\zevan\Kill The Ants!\images\GregLeftSecondStep.png",
-            r"C:\Users\zevan\Kill The Ants!\images\GregLeftHalfwayStep.png",
-            r"C:\Users\zevan\Kill The Ants!\images\GregLeftFirstStep.png",
-            r"C:\Users\zevan\Kill The Ants!\images\GregRightLegFirstTrans.png",
-            r"C:\Users\zevan\Kill The Ants!\images\GregRightLegSecondTrans.png",
-            r"C:\Users\zevan\Kill The Ants!\images\GregRightHalfwayStep.png"
+        # player is 33 x 60 px
+        self.idleImageRight = r"C:\Users\zevan\Kill The Ants!\images\GregIdle.png"
+        self.walkingPics = [
+           r"C:\Users\zevan\Kill The Ants!\images\GregWalk1.png",
+           r"C:\Users\zevan\Kill The Ants!\images\GregWalk2.png"
         ]
+        self.crawlingImageRight = r"C:\Users\zevan\Kill The Ants!\images\GregCrawl.png"
         self.idleImageRight = pygame.image.load(self.idleImageRight).convert_alpha()
-        self.walkImagesRight = [pygame.image.load(pic).convert_alpha() for pic in self.walkingPlayerPics]
+        self.walkImagesRight = [pygame.image.load(pic).convert_alpha() for pic in self.walkingPics]
+        self.crawlingImageRight = pygame.image.load(self.crawlingImageRight).convert_alpha()
+        self.idleImageRight = pygame.transform.scale(self.idleImageRight, (self.idleImageRight.get_width() * 1.5, self.idleImageRight.get_height() * 1.5))
+        self.walkImagesRight = [pygame.transform.scale(pic, (self.idleImageRight.get_width(), self.idleImageRight.get_height())) for pic in self.walkImagesRight]
+        self.crawlingImageRight = pygame.transform.scale(self.crawlingImageRight, (self.crawlingImageRight.get_width() * 1.5, self.crawlingImageRight.get_height() * 1.5))
         self.idleImageLeft = pygame.transform.flip(self.idleImageRight, True, False)
         self.walkImagesLeft = [pygame.transform.flip(pic, True, False) for pic in self.walkImagesRight]
-        self.hitbox = self.idleImageRight.get_rect()
+        self.crawlingImageLeft = pygame.transform.flip(self.crawlingImageRight, True, False)
+        self.normalHitbox = self.idleImageRight.get_rect()
+        self.crawlHitbox = self.crawlingImageRight.get_rect()
+        self.currentHitbox = self.normalHitbox
         self.aniIndex = 0
         self.frameCounter = 0
         self.currentDirection = '>'
@@ -42,58 +44,77 @@ class Player(pygame.sprite.Sprite):
         self.aniIndex = (self.aniIndex + 1) % len(self.walkImagesRight)
     
     def getHitbox(self):
-        return self.hitbox
+        return self.currentHitbox
     
     def gravity(self):
         self.yDelta += 0.5
-        self.hitbox.y += self.yDelta
-        if self.hitbox.y >= 600 - 40:
-            self.hitbox.y = 600 - 40
+        self.currentHitbox.y += self.yDelta
+        if self.currentHitbox.y >= 600 - self.currentHitbox.height:
+            self.currentHitbox.y = 600 - self.currentHitbox.height
             self.yDelta = 0
 
     def moveLeft(self):
         self.currentDirection = '<'
 
         self.frameCounter += 1
-        if self.frameCounter % 6 == 0:
+        if self.frameCounter % 12 == 0:
             self.updateWalkAnimationIndex()
             self.currentPlayerImg = self.getWalkImageLeft()
 
-        self.hitbox.x -= 2
-        if self.hitbox.x <= 0:
-            self.hitbox.x = 0
+        self.currentHitbox.x -= 2
+        if self.currentHitbox.x <= 0:
+            self.currentHitbox.x = 0
     
     def moveRight(self):
         self.currentDirection = '>'
 
         self.frameCounter += 1
-        if self.frameCounter % 6 == 0:
+        if self.frameCounter % 12 == 0:
             self.updateWalkAnimationIndex()
             self.currentPlayerImg = self.getWalkImageRight()
 
-        self.hitbox.x += 2
-        if self.hitbox.x >= 800 - 22:
-            self.hitbox.x = 800 - 22
+        self.currentHitbox.x += 2
+        if self.currentHitbox.x >= 800 - 22:
+            self.currentHitbox.x = 800 - 22
     
+    def crawl(self):
+        self.crawlHitbox.x = self.currentHitbox.x
+        self.crawlHitbox.y = self.currentHitbox.y
+        if self.currentDirection == '>':
+            self.currentPlayerImg = self.crawlingImageRight
+        else:
+            self.currentPlayerImg = self.crawlingImageLeft
+        self.currentHitbox = self.crawlHitbox
+
+    def moveUp(self):
+        if self.keyPressed == None: #and not ladder
+            self.normalHitbox.y -= 6
+        #todo! ladder mechanics
+
     def movement(self):
         self.gravity()
+        dontMove = False
 
+        
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_a]:
+        if keys[pygame.K_a] and not keys[pygame.K_s]:
+            self.currentHitbox = self.normalHitbox
             self.moveLeft()
             self.keyPressed = pygame.K_a
-        elif keys[pygame.K_d]:
+        elif keys[pygame.K_d] and not keys[pygame.K_s]:
+            self.currentHitbox = self.normalHitbox
             self.moveRight()
             self.keyPressed = pygame.K_d
         elif keys[pygame.K_w]:
-            # self.moveUp()
+            self.moveUp()
             self.keyPressed = pygame.K_w
         elif keys[pygame.K_s]:
-            # self.moveDown()
+            self.crawl()
             self.keyPressed = pygame.K_s
         else:
             self.aniIndex = 0
             self.frameCounter = 0
+            self.currentHitbox = self.normalHitbox
 
             if self.currentDirection == '>':
                 self.currentPlayerImg = self.idleImageRight
