@@ -15,7 +15,9 @@ class Player(SpriteObject.SpriteObject):
         self.idleImageLeft = pygame.transform.flip(self.idleImageRight, True, False)
         self.walkImagesLeft = [pygame.transform.flip(pic, True, False) for pic in self.walkImagesRight]
         self.crawlingImageLeft = pygame.transform.flip(self.crawlingImageRight, True, False)
-
+        self.climbImage1 = self.loadSprite(r"C:\Users\zevan\Kill The Ants!\images\GregClimb1.png")
+        self.climbImage2 = pygame.transform.flip(self.climbImage1, True, False)
+        self.climbImages = [self.climbImage1, self.climbImage2]
 
         self.normalHitbox = self.idleImageRight.get_rect()
         self.crawlHitbox = self.crawlingImageRight.get_rect()
@@ -44,6 +46,9 @@ class Player(SpriteObject.SpriteObject):
 
     def getWalkImageLeft(self):
         return self.walkImagesLeft[self.animationFrameIndex]
+    
+    def getClimbImage(self):
+        return self.climbImages[self.animationFrameIndex]
     
     def getPlayerSprite(self):
         return self.currentPlayerImg
@@ -98,8 +103,22 @@ class Player(SpriteObject.SpriteObject):
     def moveUp(self):
         if self.touchesLadder:
             self.currentHitbox.y -= 1.5
+            self.frameCounter += 1
+            if self.frameCounter % 12 == 0:
+                self.updateWalkAnimationIndex()
+                self.currentPlayerImg = self.getClimbImage()
         elif self.keyPressed == None and not self.touchesLadder: 
             self.currentHitbox.y -= 6
+
+    def moveDown(self):
+        if self.touchesLadder:
+            self.currentHitbox.y += 1.5
+            self.frameCounter += 1
+            if self.frameCounter % 12 == 0:
+                self.updateWalkAnimationIndex()
+                self.currentPlayerImg = self.getClimbImage()
+        else:
+            self.crawl()
         
 
     def movement(self):
@@ -118,7 +137,7 @@ class Player(SpriteObject.SpriteObject):
             self.moveUp()
             self.keyPressed = pygame.K_w
         elif keys[pygame.K_s]:
-            self.crawl()
+            self.moveDown()
             self.keyPressed = pygame.K_s
         else:
             self.animationFrameIndex = 0
