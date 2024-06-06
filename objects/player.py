@@ -158,9 +158,17 @@ class Player(SpriteObject.SpriteObject):
     def touchingblock(self, blocks):
         if not self.touchesLadder:
             for i in blocks:
+                #vertical collision
                 if self.currentHitbox.center[1] + self.currentHitbox.height * 0.47 >= i.hitbox.y and self.currentHitbox.center[1] < i.hitbox.y:
-                    if self.currentHitbox.center[0] + 19 >= i.hitbox.x and self.currentHitbox.center[0] - 19 <= i.hitbox.x + 33:
+                    if self.currentHitbox.x + self.currentHitbox.width >= i.hitbox.x and self.currentHitbox.x <= i.hitbox.x + i.hitbox.width:
                         self.doGravity = False
                         self.currentHitbox.y = i.hitbox.y + 4 - self.currentHitbox.height
+                # horizontal collision
+                if self.currentHitbox.x + self.currentHitbox.width >= i.hitbox.x and self.currentHitbox.center[0] < i.hitbox.x:
+                    if self.currentHitbox.y <= i.hitbox.y + i.hitbox.height and self.currentHitbox.y + self.currentHitbox.height - 5 > i.hitbox.y:
+                        self.currentHitbox.x = i.hitbox.x - self.currentHitbox.width - 1 # the -1 just makes things work I guess
+                if self.currentHitbox.x <= i.hitbox.x + i.hitbox.width and self.currentHitbox.center[0] > i.hitbox.x + i.hitbox.width:
+                    if self.currentHitbox.y <= i.hitbox.y + i.hitbox.height and self.currentHitbox.y + self.currentHitbox.height - 5 > i.hitbox.y:
+                        self.currentHitbox.x = i.hitbox.x + i.hitbox.width + 1
         
 

@@ -16,7 +16,7 @@ caption = pygame.display.set_caption("Kill the Ants!")
 
 player = objects.Player.Player(200, 500)
 
-blocks = [objects.WoodBlock.WoodBlock(33, 600 - 33*4), objects.WoodBlock.WoodBlock(33 * 2, 600 - 33*4), objects.WoodBlock.WoodBlock(33*3, 600 - 33*5)]
+blocks = [objects.WoodBlock.WoodBlock(33, 600 - 33*5), objects.WoodBlock.WoodBlock(33 * 2, 600 - 33*5), objects.WoodBlock.WoodBlock(33*3, 600 - 33*4)]
 ladders = [objects.Ladder.Ladder(0,600-33), objects.Ladder.Ladder(0,600-66), objects.Ladder.Ladder(0,600-99), objects.Ladder.Ladder(0, 600 - (33 * 4)), objects.Ladder.Ladder(0, 600 - (33 * 5))]
 
 clock = pygame.time.Clock()
@@ -37,7 +37,7 @@ while running:
     player.touchingblock(blocks)
     player.movement()
 
-    screen.fill((255,255,255))
+    screen.fill((220,190,140))
     for i in ladders: screen.blit(i.getSprite(), i.getHitbox())
     for i in blocks: screen.blit(i.getSprite(), i.getHitbox())
     screen.blit(player.getPlayerSprite(), player.getHitbox())
