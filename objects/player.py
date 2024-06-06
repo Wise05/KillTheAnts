@@ -4,7 +4,7 @@ from objects import SpriteObject
 class Player(SpriteObject.SpriteObject):
     def __init__(self, x, y):
         super().__init__()
-        # player is 23 x 40 px
+        # player is 38 x 66 px
         self.idleImageRight = self.loadSprite(r"C:\Users\zevan\Kill The Ants!\images\GregIdle.png")
         self.walkingImages = [
            r"C:\Users\zevan\Kill The Ants!\images\GregWalk1.png",
@@ -38,7 +38,7 @@ class Player(SpriteObject.SpriteObject):
         self.yDelta = 0
         self.keyPressed = None
 
-
+        self.doGravity = True
         self.touchesLadder = False
     
     def getWalkImageRight(self):
@@ -60,7 +60,7 @@ class Player(SpriteObject.SpriteObject):
         return self.currentHitbox
     
     def gravity(self):
-        if not self.touchesLadder:
+        if self.doGravity:
             self.yDelta += 0.5
             self.currentHitbox.y += self.yDelta
             if self.currentHitbox.y >= 600 - self.currentHitbox.height:
@@ -152,4 +152,15 @@ class Player(SpriteObject.SpriteObject):
             self.keyPressed = None
 
     def setTouchesLadder(self, boo):
+        self.doGravity = not boo
         self.touchesLadder = boo
+
+    def touchingblock(self, blocks):
+        if not self.touchesLadder:
+            for i in blocks:
+                if self.currentHitbox.center[1] + self.currentHitbox.height * 0.47 >= i.hitbox.y and self.currentHitbox.center[1] < i.hitbox.y:
+                    if self.currentHitbox.center[0] + 19 >= i.hitbox.x and self.currentHitbox.center[0] - 19 <= i.hitbox.x + 33:
+                        self.doGravity = False
+                        self.currentHitbox.y = i.hitbox.y + 4 - self.currentHitbox.height
+        
+

@@ -2,25 +2,22 @@ import pygame
 import objects
 import objects.Player
 import objects.Ladder
+import objects.WoodBlock
 
 pygame.init()
 pygame.mixer.init()
 
+#grid is 25x19 block units
+#block units are 33x33 pixels
 displayWidth = 800
 displayHeight = 600
 screen = pygame.display.set_mode((displayWidth, displayHeight))
 caption = pygame.display.set_caption("Kill the Ants!")
 
-player = objects.Player.Player(40, 500)
+player = objects.Player.Player(200, 500)
 
-
-ladders = [objects.Ladder.Ladder(0,560), objects.Ladder.Ladder(0,520), objects.Ladder.Ladder(0,480)]
-
-def checkLadders():
-    for i in ladders: 
-        if player.getHitbox().colliderect(i.getHitbox()):
-            return True
-    return False
+blocks = [objects.WoodBlock.WoodBlock(33, 600 - 33*4), objects.WoodBlock.WoodBlock(33 * 2, 600 - 33*4), objects.WoodBlock.WoodBlock(33*3, 600 - 33*5)]
+ladders = [objects.Ladder.Ladder(0,600-33), objects.Ladder.Ladder(0,600-66), objects.Ladder.Ladder(0,600-99), objects.Ladder.Ladder(0, 600 - (33 * 4)), objects.Ladder.Ladder(0, 600 - (33 * 5))]
 
 clock = pygame.time.Clock()
 running = True
@@ -35,11 +32,14 @@ while running:
     if frames == 60:
         frames = 0
 
-    player.setTouchesLadder(checkLadders())
+    if ladders != None:
+        player.setTouchesLadder(ladders[0].checkLadders(player, ladders))
+    player.touchingblock(blocks)
     player.movement()
 
     screen.fill((255,255,255))
     for i in ladders: screen.blit(i.getSprite(), i.getHitbox())
+    for i in blocks: screen.blit(i.getSprite(), i.getHitbox())
     screen.blit(player.getPlayerSprite(), player.getHitbox())
 
     pygame.display.flip()
