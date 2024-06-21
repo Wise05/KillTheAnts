@@ -1,0 +1,16 @@
+Overview: 
+Puzzle platformer that involves killing all ants before buring down the most of the house. 
+
+Objects:
+Burning tools: 
+matches, lasers, and grenades.
+Ways to put out fires:
+walking on fire and water bucket (worried about this one's mechanics).
+Other objects: 
+wooden blocks, stone blocks, ladders, chests, mirrors (lasers), stairs. 
+Types of ants: 
+stationary, ranged, aggressive, and free spirits
+
+Mechanics:
+Fire spread: fire burns flamable objects at a certain rate only if adjacent
+Carbon monoxide levels rise unless there is a large enough hole in the roof

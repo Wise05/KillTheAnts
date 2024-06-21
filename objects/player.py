@@ -171,4 +171,3 @@ class Player(SpriteObject.SpriteObject):
                     if self.currentHitbox.y <= i.hitbox.y + i.hitbox.height and self.currentHitbox.y + self.currentHitbox.height - 5 > i.hitbox.y:
                         self.currentHitbox.x = i.hitbox.x + i.hitbox.width + 1
         
-
