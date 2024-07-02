@@ -10,6 +10,8 @@ Other objects:
 wooden blocks, stone blocks, ladders, chests, mirrors (lasers), stairs. 
 Types of ants: 
 stationary, ranged, aggressive, and free spirits
+Electrical stuff:
+levelers, lights?, 
 
 Mechanics:
 Fire spread: fire burns flamable objects at a certain rate only if adjacent

@@ -2,7 +2,7 @@ import pygame
 from objects import SpriteObject
 
 class Fire(SpriteObject.SpriteObject):
-    def __init__(self, x, y):
+    def __init__(self, blockOnFire, isOnTop):
         super().__init__()
 
         self.images = [
@@ -13,8 +13,15 @@ class Fire(SpriteObject.SpriteObject):
         self.images = [self.loadSprite(img) for img in self.images]
         self.image = self.images[0]
         self.hitbox = self.image.get_rect()
-        self.hitbox.x = x
-        self.hitbox.y = y
+        self.isOnTop = isOnTop
+
+        self.hitbox.x = blockOnFire.getHitbox().x
+        self.hitbox.y = blockOnFire.getHitbox().y
+        if (isOnTop):
+            self.hitbox.y -= 33
+
+        blockOnFire.setFire(self)
+
         self.frameCounter = 0
         self.imageIndex = 0
 
@@ -29,3 +36,28 @@ class Fire(SpriteObject.SpriteObject):
 
     def getHitbox(self):
         return self.hitbox
+    
+    def getIsOnTop(self):
+        return self.isOnTop
+    
+    def fireSpread(self, block, blocks, fires):
+        leftBlock = block.findBlockLeft(blocks)
+        rightBlock = block.findBlockRight(blocks)
+        upBlock = block.findBlockUp(blocks)
+        downBlock = block.findBlockDown(blocks)
+
+        if leftBlock != None and leftBlock.getFire() == None:
+            fires.append(Fire(leftBlock, False))
+        if rightBlock != None and rightBlock.getFire() == None:
+            fires.append(Fire(rightBlock, False))
+        if upBlock != None and upBlock.getFire() == None:
+            fires.append(Fire(upBlock, False))
+        if downBlock != None and downBlock.getFire() == None:
+            fires.append(Fire(downBlock, False))
+    
+    def findFire(self, findMe, fires):
+        for fire in fires:
+            if fire.getHitbox() == findMe.getHitbox():
+                return fire
+        return None
+        
