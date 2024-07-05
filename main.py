@@ -4,6 +4,7 @@ import objects.Player
 import objects.Ladder
 import objects.WoodBlock
 import objects.Fire
+import objects.StoneBlock
 
 pygame.init()
 pygame.mixer.init()
@@ -17,9 +18,9 @@ caption = pygame.display.set_caption("Kill the Ants!")
 
 player = objects.Player.Player(200, 500)
 
-blocks = [objects.WoodBlock.WoodBlock(33, 600 - 33*5), objects.WoodBlock.WoodBlock(33 * 2, 600 - 33*5), objects.WoodBlock.WoodBlock(33*3, 600 - 33*4), objects.WoodBlock.WoodBlock(33 * 3, 600 - 33*5)]
+blocks = [objects.WoodBlock.WoodBlock(33, 600 - 33*5), objects.WoodBlock.WoodBlock(33 * 2, 600 - 33*5), objects.WoodBlock.WoodBlock(33*3, 600 - 33*4), objects.StoneBlock.StoneBlock(33 * 3, 600 - 33*5)]
 ladders = [objects.Ladder.Ladder(0,600-33), objects.Ladder.Ladder(0,600-66), objects.Ladder.Ladder(0,600-99), objects.Ladder.Ladder(0, 600 - (33 * 4)), objects.Ladder.Ladder(0, 600 - (33 * 5))]
-fires = [objects.Fire.Fire(blocks[0], False)]
+fires = [objects.Fire.Fire(blocks[0])]
 
 
 clock = pygame.time.Clock()
@@ -41,11 +42,8 @@ while running:
     player.movement()
 
     for block in blocks:
-        fire = block.burnTick(blocks, fires)
-        if fire != None:
-            blocks.remove(block)
-            fires.remove(fire.findFire(fire, fires))
-    
+        if isinstance(block, objects.WoodBlock.WoodBlock):
+            fire = block.burnTick(blocks, fires) 
 
     screen.fill((60,40,30))
     for i in ladders: screen.blit(i.getSprite(), i.getHitbox())

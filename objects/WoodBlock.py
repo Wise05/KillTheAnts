@@ -1,6 +1,5 @@
 import pygame
 from objects import SpriteObject
-import random
 
 class WoodBlock(SpriteObject.SpriteObject):
     def __init__(self, x, y):
@@ -10,6 +9,7 @@ class WoodBlock(SpriteObject.SpriteObject):
         self.hitbox = self.image.get_rect()
         self.hitbox.x = x
         self.hitbox.y = y
+        
         self.burningTimer = 0
         self.fire = None
 
@@ -26,7 +26,7 @@ class WoodBlock(SpriteObject.SpriteObject):
         return self.fire
 
     def burnTick(self, blocks, fires):
-        if self.fire != None and not self.fire.getIsOnTop():
+        if self.fire != None:
             self.burningTimer += 1
 
             if self.burningTimer >= 100:

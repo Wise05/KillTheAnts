@@ -1,8 +1,11 @@
 import pygame
 from objects import SpriteObject
+import random
+import objects
+import objects.StoneBlock
 
 class Fire(SpriteObject.SpriteObject):
-    def __init__(self, blockOnFire, isOnTop):
+    def __init__(self, blockOnFire):
         super().__init__()
 
         self.images = [
@@ -13,12 +16,9 @@ class Fire(SpriteObject.SpriteObject):
         self.images = [self.loadSprite(img) for img in self.images]
         self.image = self.images[0]
         self.hitbox = self.image.get_rect()
-        self.isOnTop = isOnTop
 
         self.hitbox.x = blockOnFire.getHitbox().x
         self.hitbox.y = blockOnFire.getHitbox().y
-        if (isOnTop):
-            self.hitbox.y -= 33
 
         blockOnFire.setFire(self)
 
@@ -46,18 +46,27 @@ class Fire(SpriteObject.SpriteObject):
         upBlock = block.findBlockUp(blocks)
         downBlock = block.findBlockDown(blocks)
 
-        if leftBlock != None and leftBlock.getFire() == None:
-            fires.append(Fire(leftBlock, False))
-        if rightBlock != None and rightBlock.getFire() == None:
-            fires.append(Fire(rightBlock, False))
-        if upBlock != None and upBlock.getFire() == None:
-            fires.append(Fire(upBlock, False))
-        if downBlock != None and downBlock.getFire() == None:
-            fires.append(Fire(downBlock, False))
+        self.chanceSpread(block, leftBlock, blocks, fires)
+        self.chanceSpread(block, rightBlock, blocks, fires)
+        self.chanceSpread(block, upBlock, blocks, fires)
+        self.chanceSpread(block, downBlock, blocks, fires)
     
     def findFire(self, findMe, fires):
         for fire in fires:
             if fire.getHitbox() == findMe.getHitbox():
                 return fire
         return None
+    
+    def chanceSpread(self, burningBlock, spreadBlock, blocks, fires):
+        if (random.randint(0, 100) <= 95) and not isinstance(spreadBlock, objects.StoneBlock.StoneBlock):
+            if spreadBlock != None and spreadBlock.getFire() == None:
+                fires.append(Fire(spreadBlock))
+            try: #I feel like I shouldn't do this, but whatever, it works
+                blocks.remove(burningBlock)
+                fires.remove(burningBlock.getFire().findFire(burningBlock.getFire(), fires))
+            except:
+                do = "nothing"
+
+
+        
         

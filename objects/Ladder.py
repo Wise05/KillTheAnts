@@ -9,6 +9,7 @@ class Ladder(SpriteObject.SpriteObject):
         self.hitbox.x = x
         self.hitbox.y = y
 
+
     def getSprite(self):
         return self.image
 
@@ -20,3 +21,4 @@ class Ladder(SpriteObject.SpriteObject):
             if player.getHitbox().colliderect(i.getHitbox()):
                 return True
         return False
+    
