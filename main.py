@@ -5,6 +5,7 @@ import objects.Ladder
 import objects.WoodBlock
 import objects.Fire
 import objects.StoneBlock
+import objects.Chest
 
 pygame.init()
 pygame.mixer.init()
@@ -21,6 +22,7 @@ player = objects.Player.Player(200, 500)
 blocks = [objects.WoodBlock.WoodBlock(33, 600 - 33*5), objects.WoodBlock.WoodBlock(33 * 2, 600 - 33*5), objects.WoodBlock.WoodBlock(33*3, 600 - 33*4), objects.StoneBlock.StoneBlock(33 * 3, 600 - 33*5)]
 ladders = [objects.Ladder.Ladder(0,600-33), objects.Ladder.Ladder(0,600-66), objects.Ladder.Ladder(0,600-99), objects.Ladder.Ladder(0, 600 - (33 * 4)), objects.Ladder.Ladder(0, 600 - (33 * 5))]
 fires = [objects.Fire.Fire(blocks[0])]
+actableObjects = [objects.Chest.Chest(33*10, 600 -33, None)]
 
 
 clock = pygame.time.Clock()
@@ -39,7 +41,7 @@ while running:
     if ladders != None:
         player.setTouchesLadder(ladders[0].checkLadders(player, ladders))
     player.touchingblock(blocks)
-    player.movement()
+    player.movement(actableObjects)
 
     for block in blocks:
         if isinstance(block, objects.WoodBlock.WoodBlock):
@@ -49,6 +51,7 @@ while running:
     for i in ladders: screen.blit(i.getSprite(), i.getHitbox())
     for i in blocks: screen.blit(i.getSprite(), i.getHitbox())
     for i in fires: screen.blit(i.getSprite(), i.getHitbox())
+    for i in actableObjects: screen.blit(i.getSprite(), i.getHitbox())
     screen.blit(player.getPlayerSprite(), player.getHitbox())
 
     pygame.display.flip()

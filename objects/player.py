@@ -119,9 +119,13 @@ class Player(SpriteObject.SpriteObject):
                 self.currentPlayerImg = self.getClimbImage()
         else:
             self.crawl()
-        
 
-    def movement(self):
+    def interact(self, interactableObjects):
+        for i in interactableObjects:
+            if self.getHitbox().colliderect(i.getHitbox()):
+                i.interact()
+
+    def movement(self, actableObjects):
         self.gravity()
 
         keys = pygame.key.get_pressed()
@@ -139,6 +143,8 @@ class Player(SpriteObject.SpriteObject):
         elif keys[pygame.K_s]:
             self.moveDown()
             self.keyPressed = pygame.K_s
+        elif keys[pygame.K_SPACE]:
+            self.interact(actableObjects)
         else:
             self.animationFrameIndex = 0
             self.frameCounter = 0

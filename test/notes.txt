@@ -3,7 +3,7 @@ Puzzle platformer that involves killing all ants before buring down the most of 
 
 Objects:
 Burning tools: 
-matches, lasers, and grenades.
+matches, lasers, and bombs.
 Ways to put out fires:
 walking on fire and water bucket (worried about this one's mechanics).
 Other objects: 
